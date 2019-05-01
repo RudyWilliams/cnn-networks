@@ -10,7 +10,9 @@ data = tf.keras.datasets.mnist.load_data()
 train, test = data
 image_train, y_train = train
 image_test, y_test = test
-
+#make each value be from 0 to 1
+image_train = image_train / 255
+image_test = image_test / 255
 n_classes = 10
 width, height = image_train.shape[1::]
 
@@ -38,10 +40,6 @@ if __name__ == '__main__':
     plt.grid(False)
     plt.show()
     ## this shows that each pixel takes a value from 0 to 255
-
-    #make each value be from 0 to 1
-    image_train = image_train / 255
-    image_test = image_test / 255
 
     plt.imshow(image_train[0])
     plt.colorbar()
