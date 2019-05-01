@@ -51,6 +51,9 @@ model.fit(dd.image_tr_rshp, dd.y_tr_hot,
 
 score = model.evaluate(dd.image_te_rshp, dd.y_te_hot, verbose=0)
 
+#save model
+keras.models.save_model(model, 'C:\\Users\\rudyw\\cnn-networks\\lenet_5.h5py')
+
 if __name__ == '__main__':
     print(f'Test loss: {score[0]}')
     print(f'Test accuracy: {score[1]}')
