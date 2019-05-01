@@ -35,14 +35,9 @@ if __name__ == '__main__':
 
     #plot an image to show the datas form
     #plt.figure(figsize=(1,2))
-    plt.imshow(image_train[0])
+    plt.imshow(image_train[0], cmap='binary')
     plt.colorbar()
     plt.grid(False)
     plt.show()
-    ## this shows that each pixel takes a value from 0 to 255
 
-    plt.imshow(image_train[0])
-    plt.colorbar()
-    plt.grid(False)
-    plt.show()
     
