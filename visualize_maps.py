@@ -1,3 +1,8 @@
+"""
+    Scratch-pad code. Used for exploratory purposes.
+
+"""
+
 import tensorflow as tf
 from tensorflow import keras
 

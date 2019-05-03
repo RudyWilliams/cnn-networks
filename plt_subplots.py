@@ -1,3 +1,8 @@
+"""
+    Scratch-pad code. Used to play with plt.subplots.
+"""
+
+
 import matplotlib.pyplot as plt 
 import digits_data as dd 
 from visualize_maps import kernel_one, fm_0
