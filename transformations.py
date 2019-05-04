@@ -30,14 +30,26 @@ class CreateRow:
                     updated instance of the 6x3 subplot
     """
 
-    def __init__(self, images, kernels, feature_maps):
+    def __init__(self, model, images, im_loc):
         self.fig, self.axs = plt.subplots(6, 3)
         self.images = images
-        self.kernels = kernels
-        self.feature_maps = feature_maps
+        self.im_loc = im_loc
 
-    def new_row(self,  row_num, im_loc, ker_fmap_loc):
-        imc0 = self.axs[row_num, 0].imshow(self.images[im_loc], cmap='binary')
+        #get weights of c1 (i.e. get the kernels)
+        self.c1 = model.layers[0]
+        self.c1_Wb = self.c1.get_weights()
+        self.c1_W = self.c1_Wb[0]
+        self.kernels = [self.c1_W[:, :, 0, i] for i in range(self.c1_W.shape[3])]
+
+        #get the corresponding maps
+        X = image_tr_rshp[self.im_loc] #same figure, dif maps
+        X = np.expand_dims(X, axis=0)
+        self.c1_output = K.function([self.c1.input], [self.c1.output])
+        self.feature_maps = [self.c1_output(X)[0][:, :, :, i][0] for i in range(self.c1_W.shape[3])]
+
+
+    def new_row(self,  row_num, ker_fmap_loc):
+        imc0 = self.axs[row_num, 0].imshow(self.images[self.im_loc], cmap='binary')
         self.fig.colorbar(imc0, ax=self.axs[row_num, 0])
         imc1 = self.axs[row_num, 1].imshow(self.kernels[ker_fmap_loc], cmap='binary') #don't want to norm this one bc the neg values are valueable
         self.fig.colorbar(imc1, ax=self.axs[row_num, 1])
@@ -45,31 +57,16 @@ class CreateRow:
         self.fig.colorbar(imc2, ax=self.axs[row_num, 2])
 
 
-lenet5 = tf.keras.models.load_model('lenet_5.h5py')
-
-#get weights of c1 (i.e. get the kernels)
-c1 = lenet5.layers[0]
-c1_Wb = c1.get_weights()
-c1_W = c1_Wb[0]
-kernels = [c1_W[:, :, 0, i] for i in range(c1_W.shape[3])]
-
-#get the corresponding maps
-X = image_tr_rshp[0] #same figure, dif maps
-X = np.expand_dims(X, axis=0)
-c1_output = K.function([c1.input],
-                       [c1.output])
-
-fmaps = [c1_output(X)[0][:, :, :, i][0] for i in range(c1_W.shape[3])]
-
 if __name__ == '__main__':
-    
-    print(image_train.shape)
-    grid = CreateRow(image_train, kernels, fmaps)
-    grid.new_row(row_num=0, im_loc=0, ker_fmap_loc=0)
-    grid.new_row(row_num=1, im_loc=0, ker_fmap_loc=1)
-    grid.new_row(row_num=2, im_loc=0, ker_fmap_loc=2)
-    grid.new_row(row_num=3, im_loc=0, ker_fmap_loc=3)
-    grid.new_row(row_num=4, im_loc=0, ker_fmap_loc=4)
-    grid.new_row(row_num=5, im_loc=0, ker_fmap_loc=5)
+
+    lenet5 = tf.keras.models.load_model('lenet_5.h5py')
+
+    grid = CreateRow(lenet5, image_train, im_loc=0)
+    grid.new_row(row_num=0, ker_fmap_loc=0)
+    grid.new_row(row_num=1, ker_fmap_loc=1)
+    grid.new_row(row_num=2, ker_fmap_loc=2)
+    grid.new_row(row_num=3, ker_fmap_loc=3)
+    grid.new_row(row_num=4, ker_fmap_loc=4)
+    grid.new_row(row_num=5, ker_fmap_loc=5)
 
     plt.show()
