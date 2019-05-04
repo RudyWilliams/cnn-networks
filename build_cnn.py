@@ -1,3 +1,4 @@
+import os
 import tensorflow as tf
 from tensorflow import keras
 import digits_data as dd
@@ -52,7 +53,11 @@ model.fit(dd.image_tr_rshp, dd.y_tr_hot,
 score = model.evaluate(dd.image_te_rshp, dd.y_te_hot, verbose=0)
 
 #save model
-keras.models.save_model(model, 'C:\\Users\\rudyw\\cnn-networks\\lenet_5.h5py')
+def save_model_at(ROOTPATH):
+    keras.models.save_model(model, os.path.join(ROOTPATH, 'lenet_5.h5py'))
+
+save_model_at('C:\\Users\\rudyw\\cnn-networks\\')
+
 
 if __name__ == '__main__':
     print(f'Test loss: {score[0]}')

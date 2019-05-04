@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt 
 import tensorflow as tf
@@ -59,9 +60,10 @@ class CreateRow:
 
 if __name__ == '__main__':
 
-    lenet5 = tf.keras.models.load_model('lenet_5.h5py')
+    ROOTPATH = 'C:\\Users\\rudyw\\cnn-networks\\'
+    lenet5 = tf.keras.models.load_model(os.path.join(ROOTPATH,'lenet_5.h5py'))
 
-    grid = CreateRow(lenet5, image_train, im_loc=0)
+    grid = CreateRow(lenet5, image_train, im_loc=2)
     grid.new_row(row_num=0, ker_fmap_loc=0)
     grid.new_row(row_num=1, ker_fmap_loc=1)
     grid.new_row(row_num=2, ker_fmap_loc=2)
